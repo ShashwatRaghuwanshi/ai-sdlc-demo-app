@@ -28,19 +28,20 @@ public class ApprovalService
         return invoice;
     }
 
-    public Invoice Approve(string invoiceId, string approver)
+    public Invoice Approve(string invoiceId, string approverUsername, string approverRole)
     {
         var invoice = Find(invoiceId);
         EnsurePending(invoice);
+        ValidateFinalApproval(invoice, approverRole);
 
         invoice.Status = InvoiceStatus.Approved;
-        invoice.DecidedBy = approver;
+        invoice.DecidedBy = approverUsername;
         invoice.DecidedAt = DateTime.UtcNow;
         _repository.Update(invoice);
         return invoice;
     }
 
-    public Invoice Reject(string invoiceId, string approver, string reason)
+    public Invoice Reject(string invoiceId, string approverUsername, string approverRole, string reason)
     {
         if (string.IsNullOrWhiteSpace(reason))
         {
@@ -49,9 +50,10 @@ public class ApprovalService
 
         var invoice = Find(invoiceId);
         EnsurePending(invoice);
+        ValidateRejectRole(approverRole);
 
         invoice.Status = InvoiceStatus.Rejected;
-        invoice.DecidedBy = approver;
+        invoice.DecidedBy = approverUsername;
         invoice.DecidedAt = DateTime.UtcNow;
         invoice.DecisionNote = reason;
         _repository.Update(invoice);
@@ -69,5 +71,59 @@ public class ApprovalService
             throw new InvalidOperationException(
                 $"Invoice {invoice.Id} is {invoice.Status}; only pending invoices can be decided.");
         }
+    }
+
+    private static void ValidateFinalApproval(Invoice invoice, string approverRole)
+    {
+        if (string.IsNullOrWhiteSpace(approverRole))
+        {
+            throw new InvalidOperationException("Approver role is required for final approval.");
+        }
+
+        var normalizedRole = approverRole.Trim();
+
+        if (normalizedRole.Equals("Manager", StringComparison.OrdinalIgnoreCase))
+        {
+            if (invoice.Amount > 50000m)
+            {
+                throw new InvalidOperationException(
+                    $"Manager final approval is only allowed for invoices up to 50,000. Invoice {invoice.Id} is {invoice.Amount:C}.");
+            }
+
+            return;
+        }
+
+        if (normalizedRole.Equals("Director", StringComparison.OrdinalIgnoreCase))
+        {
+            if (invoice.Amount <= 50000m || invoice.Amount > 500000m)
+            {
+                throw new InvalidOperationException(
+                    $"Director final approval is only allowed for invoices above 50,000 and up to 500,000. Invoice {invoice.Id} is {invoice.Amount:C}.");
+            }
+
+            return;
+        }
+
+        throw new InvalidOperationException(
+            $"Role '{approverRole}' is not allowed to provide final approval.");
+    }
+
+    private static void ValidateRejectRole(string approverRole)
+    {
+        if (string.IsNullOrWhiteSpace(approverRole))
+        {
+            throw new InvalidOperationException("Approver role is required to reject an invoice.");
+        }
+
+        var normalizedRole = approverRole.Trim();
+
+        if (normalizedRole.Equals("Manager", StringComparison.OrdinalIgnoreCase) ||
+            normalizedRole.Equals("Director", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        throw new InvalidOperationException(
+            $"Role '{approverRole}' is not allowed to reject an invoice.");
     }
 }
