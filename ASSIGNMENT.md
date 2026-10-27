@@ -34,11 +34,17 @@ The Manager-first sequence for invoices above 500,000 is the agreed interpretati
 
 ### Unit tests
 
-Recorded command: `dotnet test backend/InvoiceApp.sln --no-restore`
+Recorded command:
 
-- Passed: 43
+```powershell
+dotnet test .\backend\InvoiceApp.sln --no-restore
+```
+
+- Passed: 77
 - Failed: 0
 - Skipped: 0
+- Total: 77
+- Exit code: 0
 
 Console evidence: `specs/001-approval-workflow/unit-tests-final-console.txt`
 
@@ -52,36 +58,48 @@ Console evidence: `specs/001-approval-workflow/playwright-final-console.txt`
 
 ### Stryker mutation testing
 
-Recorded final mutation score: 65.49%.
+**Final successful run**
 
-- Mutants created: 144
-- Killed: 74
-- Survived: 14
-- No coverage: 25
-- Ignored: 31
-- Timed out: 0
+- Stryker.NET version: 4.13.0
+- Tests discovered: 77
+- Mutants created: 152
+- Mutants tested: 119
+- Mutants ignored: 33
+- Final mutation score: 100.00%
+- Exit code: 0
 
-Console evidence: `specs/001-approval-workflow/mutation-final-console.txt`
+The 119 mutants tested in this run were all killed by the tests. The 33 ignored mutants were excluded by Stryker's `Removed by block already covered filter`.
 
-JSON report: `specs/001-approval-workflow/mutation-final-report.json`
+Evidence:
 
-The historical baseline used a different mutant count, so its score should not be compared as a strictly like-for-like measurement without accounting for the different mutant sets.
+- Console log: `specs/001-approval-workflow/mutation-final-report-console.txt`
+- HTML report: `specs/001-approval-workflow/mutation-final-success/reports/mutation-report.html`
+
+### Baseline comparison limitation
+
+The baseline console log records a mutation score of 30.77%, with 12 killed and 10 surviving mutants. However, the baseline JSON report records 74 killed, 14 survived, 25 with no coverage, and 31 ignored. These results conflict and cannot be treated as a reliable baseline comparison.
+
+Consequently, the final 100.00% result demonstrates the outcome of the successful final run, but a reliable mutation-score improvement against the baseline cannot be claimed until the baseline discrepancy is resolved. The final HTML report and console log listed above are the authoritative evidence for the successful final run.
 
 ## Review findings and verdicts
 
-1. **Approval thresholds and stages — Supported by source and tests.** The implementation contains the single-stage thresholds and the two-stage flow for amounts above 500,000.
+1. **Approval thresholds and stages — Supported by source and tests.** The implementation contains the single-stage thresholds and the two-stage flow for invoices above 500,000.
 2. **State preservation on rejected decisions — Covered by targeted tests and the Playwright scenario.** The recorded end-to-end test passed for the Manager over-limit rejection path.
-3. **Mutation testing — Completed for the recorded final run.** The score is 65.49%; 14 mutants survived and 25 had no coverage. These results do not establish that every possible behavior is tested.
-4. **Surviving mutants — Further review recommended.** The recorded survivors are primarily string/default-value mutations in the Domain layer. Review their report details before deciding whether additional assertions are worthwhile; do not change production behavior solely to improve the score.
-5. **Full delivery review — Pending.** The complete assignment checklist, AI interaction log, demo video, and final packaging review still need verification.
+3. **Mutation testing — Successful final run recorded.** The final successful Stryker run achieved a 100.00% mutation score across 119 tested mutants, with 33 ignored. This result does not establish that every possible behavior or scenario is tested.
+4. **Baseline comparison — Not yet reliable.** The baseline console and JSON report disagree on mutation counts. Do not claim a like-for-like improvement until the discrepancy has been investigated.
+5. **Surviving mutants in earlier reports — Requires contextual review.** Earlier reports recorded surviving mutants and mutants with no coverage. Review those report details before deciding whether additional assertions are worthwhile; do not change production behavior solely to improve a score.
+6. **Full delivery review — Pending verification.** The complete assignment checklist, AI interaction log, demo video, and final packaging review still need verification.
 
 ## Outstanding deliverables
 
-- [ ] Verify and complete the required AI interaction log with actual interactions and tools used.
+- [ ] Verify and complete the required AI interaction log using actual interactions and tools used.
 - [ ] Record the link to the live 8–10 minute demo video after it exists.
 - [ ] Complete the final assignment checklist and packaging review.
+- [ ] Review the baseline mutation-report discrepancy and document the outcome.
 - [ ] Verify the final commit history and working tree before submission.
 
 ## Conclusion
 
-The repository contains implementation changes and recorded unit-test, Playwright, and mutation-testing results. The recorded final checks passed as described above. The assignment is not declared fully complete until the remaining documentation, demo, and final review deliverables have been verified.
+The repository contains the approval workflow implementation and recorded unit-test, Playwright, and Stryker validation evidence. The latest recorded unit-test run passed all 77 tests, the Playwright end-to-end test passed, and the final successful Stryker run reported a 100.00% mutation score for 119 tested mutants.
+
+The baseline mutation evidence remains inconsistent, so a reliable improvement claim cannot yet be made. The assignment should not be declared fully complete until the outstanding documentation, demo, checklist, and final packaging review deliverables have been verified.
