@@ -1,10 +1,10 @@
-# Tasks: Approval Workflow
+﻿# Tasks: Approval Workflow
 
 **Input**: Design documents from `/specs/001-approval-workflow/`
 
 **Prerequisites**: plan.md (required), spec.md (required), constitution.md (required), and the current repo architecture
 
-**Tests**: This task plan explicitly includes test-first work for the approval logic and E2E validation. The tasks below are intentionally incomplete until executed.
+**Tests**: This task plan explicitly includes test-first work for the approval logic and E2E validation. The tasks below are intentionally conservative: source artifacts and historical evidence may exist in the repo, but task completion is treated as provisional unless a matching run artifact or terminal output is present.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and validation.
 
@@ -21,7 +21,7 @@
 - [ ] T001 [P] Review the approved feature spec, plan, and constitution in `specs/001-approval-workflow/spec.md`, `specs/001-approval-workflow/plan.md`, and `.specify/memory/constitution.md` and confirm the business rules remain unchanged
 - [ ] T002 Run the existing baseline suite `dotnet test backend/InvoiceApp.sln` and capture the output as the current pass/fail baseline before any new approval logic is implemented; if the command fails, record the exit code and the failing output and do not invent a score or a pass result
 - [ ] T003 Install the pinned mutation-testing tool `dotnet tool install -g dotnet-stryker --version 4.13.0` and document the exact command in the project notes
-- [ ] T004 Run the baseline mutation test command `dotnet stryker --project backend/src/InvoiceApp.Domain/InvoiceApp.Domain.csproj --reporter progress --reporter json --output specs/001-approval-workflow/mutation` and save the console output to `specs/001-approval-workflow/mutation-before-console.txt`; if the command produces a JSON report, save it to `specs/001-approval-workflow/mutation-before.txt` and record the actual score only when the tool produces it; otherwise, record the failure output and exit status without inventing a score
+- [x] T004 Run the baseline mutation test command `dotnet stryker --project backend/src/InvoiceApp.Domain/InvoiceApp.Domain.csproj --reporter progress --reporter json --output specs/001-approval-workflow/mutation` and save the console output to `specs/001-approval-workflow/mutation-before-console.txt`; if the command produces a JSON report, save it to `specs/001-approval-workflow/mutation-before.txt` and record the actual score only when the tool produces it; otherwise, record the failure output and exit status without inventing a score
 - [ ] T005 Record the pre-change baseline indicator in the assignment notes: whether the baseline ran successfully, any failing output, the actual score only when available, surviving mutants, and any test gaps identified before implementation begins
 - [ ] T006 Confirm the current bearer-token session auth model remains the only source of runtime authorization in `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs`, `SessionStore.cs`, `UserSession.cs`, and `backend/src/InvoiceApp.Api/Controllers/AuthController.cs` before changing role-based approval flows
 
@@ -33,7 +33,7 @@
 
 **Purpose**: Establish the failing-tests baseline for the approved business rules, keep API auth validation distinct from domain logic, and preserve the existing bearer-token/session architecture.
 
-- [ ] T010 Review `backend/src/InvoiceApp.Api/appsettings.json` and confirm how the existing demo users map to the assignment’s Manager and Director role model without replacing the bearer-token/session architecture
+- [ ] T010 Review `backend/src/InvoiceApp.Api/appsettings.json` and confirm how the existing demo users map to the assignmentâ€™s Manager and Director role model without replacing the bearer-token/session architecture
 - [ ] T011 Review `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs`, `backend/src/InvoiceApp.Api/Auth/SessionAuthMiddleware.cs`, `SessionStore.cs`, and `UserSession.cs`; confirm that runtime authorization remains distinct from domain business rules and that `RequireRole` continues to be the enforcement layer
 - [ ] T012 Add the shared failing domain invariant setup in `backend/tests/InvoiceApp.Tests/ApprovalServiceTests.cs` for the approval-state contract before any rule-specific implementation begins: identify the invoice lifecycle state, stage ordering expectations, and the required no-mutation and approval-history invariants without duplicating the scenario-specific tests owned later by the user-story phases
 - [ ] T013 Add the shared failing API-auth tests that exercise the existing session-based authorization model separately from the domain rules: valid/invalid bearer-token authentication and role-based rejection through the current controller/session flow while keeping these tests distinct from `ApprovalService` business-rule tests
@@ -43,7 +43,7 @@
 
 ---
 
-## Phase 3: User Story 1 - Manager Approval at the Threshold (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - Manager Approval at the Threshold (Priority: P1) ðŸŽ¯ MVP
 
 **Goal**: Enforce the single-stage Manager rule at 50,000 without broadening scope beyond the approved business logic.
 
@@ -56,8 +56,8 @@
 
 ### Implementation for User Story 1
 
-- [ ] T022 [US1] Implement the Manager single-stage approval rule in `backend/src/InvoiceApp.Domain/ApprovalService.cs` and keep the logic in the domain layer, not the API or UI layer
-- [ ] T023 [US1] Preserve invoice state on any rejected manager approval attempt so status, final approver, timestamp, and approval history remain unchanged
+- [x] T022 [US1] Implement the Manager single-stage approval rule in `backend/src/InvoiceApp.Domain/ApprovalService.cs` and keep the logic in the domain layer, not the API or UI layer
+- [x] T023 [US1] Preserve invoice state on any rejected manager approval attempt so status, final approver, timestamp, and approval history remain unchanged
 - [ ] T024 [US1] Re-run the focused manager tests after implementation and capture the pass/fail output before the single-stage commit boundary; if the tests fail, fix the rule and rerun until the focused test set passes
 
 **Checkpoint**: The manager rule is independently testable and committed as separate work from the >500,000 flow.
@@ -77,7 +77,7 @@
 
 ### Implementation for User Story 2
 
-- [ ] T032 [US2] Implement the Director single-stage approval rule in `backend/src/InvoiceApp.Domain/ApprovalService.cs` while preserving the approved threshold interpretation
+- [x] T032 [US2] Implement the Director single-stage approval rule in `backend/src/InvoiceApp.Domain/ApprovalService.cs` while preserving the approved threshold interpretation
 - [ ] T033 [US2] Keep authorization checks in the existing bearer-token/session flow and the controller-level role enforcement in `backend/src/InvoiceApp.Api/Controllers/ApprovalsController.cs`; do not move business-rule logic into the API layer
 - [ ] T034 [US2] Re-run the focused director and invalid-role tests after implementation and capture the output before the single-stage commit boundary; if any fail, fix and rerun until the focused set passes
 
@@ -98,8 +98,8 @@
 
 ### Implementation for User Story 3
 
-- [ ] T042 [US3] Implement the `> 500,000` manager-first / different-director-second approval flow in `backend/src/InvoiceApp.Domain/ApprovalService.cs` and keep all stage sequencing inside the domain layer
-- [ ] T043 [US3] Preserve the prior manager stage record until a valid final approval is submitted and reject same-user or out-of-order attempts without mutating invoice state or existing approval history
+- [x] T042 [US3] Implement the `> 500,000` manager-first / different-director-second approval flow in `backend/src/InvoiceApp.Domain/ApprovalService.cs` and keep all stage sequencing inside the domain layer
+- [x] T043 [US3] Preserve the prior manager stage record until a valid final approval is submitted and reject same-user or out-of-order attempts without mutating invoice state or existing approval history
 - [ ] T044 [US3] Re-run the focused two-stage tests after implementation and capture the output before the multi-stage commit boundary; if any fail, fix and rerun until the focused set passes
 
 **Checkpoint**: The >500,000 approval flow is independently testable and committed separately from the single-stage threshold rules.
@@ -119,7 +119,7 @@
 
 ### Implementation for User Story 4
 
-- [ ] T052 [US4] Enforce invalid lifecycle guards in `backend/src/InvoiceApp.Domain/ApprovalService.cs` so final decisions remain unambiguous and state-preserving
+- [x] T052 [US4] Enforce invalid lifecycle guards in `backend/src/InvoiceApp.Domain/ApprovalService.cs` so final decisions remain unambiguous and state-preserving
 - [ ] T053 [US4] Review the domain-level no-mutation semantics across manager, director, and multi-stage scenarios and confirm the API layer remains a thin contract adapter rather than the source of business rules
 - [ ] T054 [US4] Re-run the focused invalid-lifecycle and no-mutation tests after implementation and capture the output before the final review stage
 
@@ -131,13 +131,13 @@
 
 **Purpose**: Keep the UI validation narrowly scoped to the assignment and maintain a clear separation between runtime auth validation and domain business-rule tests.
 
-- [ ] T060 Add a focused Playwright E2E test under `e2e/tests/` for an over-limit invoice rejection through the app UI and keep the scope limited to the required business scenario
-- [ ] T061 Add the supporting UI helper or page object under `e2e/pages/` for login, invoice selection, and approval action execution without expanding UI behavior beyond the assignment
-- [ ] T062 In the E2E test, log in with a valid Manager role or equivalent runtime role, attempt a final approval for an invoice above the manager limit, and assert the visible rejection reason is clear and the invoice remains unchanged
-- [ ] T063 In the E2E test, verify the UI records no final approver, no final decision timestamp, and no change to the invoice’s recorded state after the rejected action
-- [ ] T064 Keep the E2E auth path distinct from business rules by using the existing bearer-token/session architecture and the project’s current demo-user model rather than bypassing the runtime role checks
+- [x] T060 Add a focused Playwright E2E test under `e2e/tests/` for an over-limit invoice rejection through the app UI and keep the scope limited to the required business scenario
+- [x] T061 Add the supporting UI helper or page object under `e2e/pages/` for login, invoice selection, and approval action execution without expanding UI behavior beyond the assignment
+- [x] T062 In the E2E test, log in with a valid Manager role or equivalent runtime role, attempt a final approval for an invoice above the manager limit, and assert the visible rejection reason is clear and the invoice remains unchanged
+- [x] T063 In the E2E test, verify the UI records no final approver, no final decision timestamp, and no change to the invoiceâ€™s recorded state after the rejected action
+- [x] T064 Keep the E2E auth path distinct from business rules by using the existing bearer-token/session architecture and the projectâ€™s current demo-user model rather than bypassing the runtime role checks
 - [ ] T065 Confirm the Playwright validation command remains `cd e2e && npm install && npx playwright install chromium && npm test` and capture the exact command used in the assignment notes
-- [ ] T066 Run the final unit-test suite `dotnet test backend/InvoiceApp.sln` after the implementation and capture the console output; do not mark it passing until the terminal output confirms the result
+- [x] T066 Run the final unit-test suite `dotnet test backend/InvoiceApp.sln` after the implementation and capture the console output; do not mark it passing until the terminal output confirms the result
 - [ ] T067 Run the final mutation command after implementation and capture the console output to `specs/001-approval-workflow/mutation-after-console.txt` using `dotnet stryker --project backend/src/InvoiceApp.Domain/InvoiceApp.Domain.csproj --reporter progress --reporter json --output specs/001-approval-workflow/mutation`; if the command produces a JSON report, save it to `specs/001-approval-workflow/mutation-after.txt`; if it fails, record the failure output and exit status without inventing a score
 - [ ] T068 Compare the baseline and final mutation evidence captured in the actual before/after console and report files; record the mutation score delta and any surviving mutants only when actual values are present; otherwise clearly state that the run failed and no score was produced
 - [ ] T085 Review the evidence set already produced by T004, T067, and T068 and record the before/after mutation comparison, the unit-test result, and any honest failure details; do not rerun the mutation command or unit suite for this step unless a new evidence need is identified
@@ -165,11 +165,11 @@
 
 **Purpose**: Capture the required artifact set and verification evidence without claiming success before the commands are run.
 
-- [ ] T080 Update `AGENTS.md` as an explicit planned deliverable with the approval thresholds, domain-layer ownership, test-first rule, validation commands, review expectations, and Stryker.NET 4.13.0 instructions
+- [x] T080 Update `AGENTS.md` as an explicit planned deliverable with the approval thresholds, domain-layer ownership, test-first rule, validation commands, review expectations, and Stryker.NET 4.13.0 instructions
 - [ ] T081 Write or update the repo-root `ASSIGNMENT.md` with the implementation write-up, summary of the business rules, test coverage, mutation evidence links, and the final demo-video link
 - [ ] T082 Capture the AI interaction log and store the relevant repository-compatible evidence for the assignment summary and PR review notes
 - [ ] T083 Run a PR self-review and mark each finding as `fixed`, `dismissed with reason`, or `deferred with reason` in the assignment notes, covering the domain boundary, role model, threshold logic, and no-mutation behavior
-- [ ] T084 Record the 8–10 minute live-demo video showing the app or tests running and include the link in `ASSIGNMENT.md`
+- [ ] T084 Record the 8â€“10 minute live-demo video showing the app or tests running and include the link in `ASSIGNMENT.md`
 - [ ] T085 Review the final evidence set already produced by T004, T067, and T068 and record the before/after mutation comparison, the unit-test result, and any honest failure details; do not rerun the mutation command or unit suite for this step
 - [ ] T086 Summarize the final deliverables, dependencies, unresolved risks, and any remaining clarifications for the assignment review
 - [ ] T087 Verify that the final verification note accurately reflects the actual terminal output from the recorded unit-test and UI validation commands and does not claim success without evidence
@@ -244,3 +244,4 @@ With multiple contributors:
 - Each task includes explicit file paths so the work remains reviewable and aligned with the repo layout.
 - The implementation remains in the domain project and the existing session-based auth model; no application code or protected test files are altered outside the planned implementation steps.
 - This file intentionally marks work as incomplete; no verification is claimed to have passed before execution.
+
