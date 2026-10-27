@@ -24,13 +24,21 @@ public class ApprovalServiceTests
         Assert.Equal(InvoiceStatus.PendingApproval, result.Status);
     }
 
-    [Fact]
-    public void Submit_RejectsInvoiceThatIsNotADraft()
-    {
-        var service = ServiceFor(InvoiceWith("INV-1", InvoiceStatus.Approved));
+    
+[Fact]
+public void Submit_RejectsInvoiceThatIsNotADraft()
+{
+    var invoice = InvoiceWith("INV-1", InvoiceStatus.Approved);
+    var service = ServiceFor(invoice);
 
-        Assert.Throws<InvalidOperationException>(() => service.Submit("INV-1"));
-    }
+    var error = Assert.Throws<InvalidOperationException>(
+        () => service.Submit("INV-1"));
+
+    Assert.Equal(
+        "Invoice INV-1 is Approved; only drafts can be submitted.",
+        error.Message);
+}
+
 
     [Fact]
     public void Submit_CallsRepositoryUpdateExactlyOnce()
@@ -428,28 +436,39 @@ public class ApprovalServiceTests
         Assert.Null(invoice.DirectorApproval);
     }
 
-    [Fact]
-    public void Approve_WithBlankUsername_ThrowsWithoutMutatingInvoice()
-    {
-        var invoice = InvoiceWith("INV-500001-BLANK-USERNAME", 500001m, InvoiceStatus.PendingApproval);
-        var service = ServiceFor(invoice);
+    
+[Fact]
+public void Approve_WithBlankUsername_ThrowsWithoutMutatingInvoice()
+{
+    var invoice = InvoiceWith(
+        "INV-500001-BLANK-USERNAME",
+        500001m,
+        InvoiceStatus.PendingApproval);
+    var service = ServiceFor(invoice);
 
-        var originalStatus = invoice.Status;
-        var originalDecisionBy = invoice.DecidedBy;
-        var originalDecisionAt = invoice.DecidedAt;
-        var originalDecisionNote = invoice.DecisionNote;
-        var originalManagerApproval = invoice.ManagerApproval;
-        var originalDirectorApproval = invoice.DirectorApproval;
+    var originalStatus = invoice.Status;
+    var originalDecisionBy = invoice.DecidedBy;
+    var originalDecisionAt = invoice.DecidedAt;
+    var originalDecisionNote = invoice.DecisionNote;
+    var originalManagerApproval = invoice.ManagerApproval;
+    var originalDirectorApproval = invoice.DirectorApproval;
 
-        Assert.Throws<InvalidOperationException>(() => service.Approve("INV-500001-BLANK-USERNAME", "   ", "Manager"));
+    var error = Assert.Throws<InvalidOperationException>(
+        () => service.Approve(
+            invoice.Id, "   ", "Manager"));
 
-        Assert.Equal(originalStatus, invoice.Status);
-        Assert.Equal(originalDecisionBy, invoice.DecidedBy);
-        Assert.Equal(originalDecisionAt, invoice.DecidedAt);
-        Assert.Equal(originalDecisionNote, invoice.DecisionNote);
-        Assert.Equal(originalManagerApproval, invoice.ManagerApproval);
-        Assert.Equal(originalDirectorApproval, invoice.DirectorApproval);
-    }
+    Assert.Equal(
+        "Approver username is required for final approval.",
+        error.Message);
+
+    Assert.Equal(originalStatus, invoice.Status);
+    Assert.Equal(originalDecisionBy, invoice.DecidedBy);
+    Assert.Equal(originalDecisionAt, invoice.DecidedAt);
+    Assert.Equal(originalDecisionNote, invoice.DecisionNote);
+    Assert.Equal(originalManagerApproval, invoice.ManagerApproval);
+    Assert.Equal(originalDirectorApproval, invoice.DirectorApproval);
+}
+
 
     [Fact]
     public void RejectedApprovalAttempts_PreserveStatusAndExistingDecisionMetadata()
@@ -464,5 +483,9 @@ public class ApprovalServiceTests
         Assert.Equal(previousDecisionAt, invoice.DecidedAt);
         Assert.Equal("Prior review", invoice.DecisionNote);
     }
+
+    
+
+
 }
 
