@@ -58,7 +58,7 @@ The test verifies that a Manager's attempted final approval of an over-limit inv
 
 Console evidence: `specs/001-approval-workflow/playwright-final-console.txt`
 
-The Playwright test was not rerun as part of the latest decimal-boundary test change.
+The Playwright test was not rerun as part of the latest decimal-boundary test change. The console artifact reflects the focused test invoked by the npm `test` script; the documented full validation command is `cd e2e && npm install && npx playwright install chromium && npm test`.
 
 ### Stryker mutation testing
 
@@ -96,18 +96,57 @@ Consequently, the recorded 100.00% result demonstrates the outcome of the earlie
 5. **Separate audit-history storage — Deferred pending clarification.** The reviewed invoice model has decision metadata and Manager/Director stage records. The requirement for a separate audit-history collection or durable audit log has not been established.
 6. **Mutation testing — Earlier successful run recorded.** The prior Stryker run reported a 100.00% score for 119 tested mutants, with 33 ignored. This does not prove that every possible behavior is tested, and it predates the latest two tests.
 7. **Baseline comparison — Deferred.** The baseline console and JSON report disagree on mutation counts. Do not claim a like-for-like improvement until the discrepancy has been investigated.
-8. **Full delivery review — Pending.** The AI interaction log, demo video, remaining checklist review, and final packaging verification still need completion.
+8. **Full delivery review — Partially complete.** The AI interaction log and summary are now present in `specs/001-approval-workflow/`. The live demo video and final local packaging/working-tree verification remain outstanding.
 
 ## Outstanding deliverables
 
-- [ ] Create the AI interaction log and summary using available evidence. Label any reconstructed account as retrospective; do not invent exact prompts, timestamps, or tool usage.
+- [x] Create the AI interaction log and summary using available evidence. The repository contains `specs/001-approval-workflow/ai-interaction-log-assignment.jsonl` and `ai-interaction-summary-assignment.md`; consult the summary for provenance/limitations.
 - [ ] Record the link to the live 8–10 minute demo video after it exists.
-- [ ] Complete the applicable assignment checklist and packaging review.
+- [x] Review the specification quality checklist at `specs/001-approval-workflow/checklists/requirements.md`; its listed requirements are checked. The final packaging review is summarized in `specs/001-approval-workflow/FINAL-SUBMISSION-CHECKLIST.md`.
 - [ ] Review the baseline mutation-report discrepancy and document the outcome.
 - [ ] Review the untracked mutation logs and retain only the evidence files that are needed.
 - [ ] Verify the final commit history and working tree before submission.
 - [ ] Confirm whether a separate audit-history store is required by the assignment specification.
-- [ ] Record a final verification note based on actual terminal output.
+- [x] Record a final verification note based on existing terminal output. Unit-test and Playwright evidence are cited above; no new test run is claimed from this review environment.
+
+## Submission status as of 2026-10-28
+
+### Evidence available in the repository
+
+- Unit tests: 79 passed, 0 failed, 0 skipped in the recorded run (`unit-tests-final-console.txt`).
+- Playwright: 1 passed in the recorded focused E2E run (`playwright-final-console.txt`).
+- Stryker: an earlier successful run reported 100.00% for 119 tested mutants, with 33 ignored (`mutation-final-report-console.txt` and the HTML report). This predates the two decimal-boundary tests.
+- AI interaction log and summary are present in this repository.
+- Git history includes multiple meaningful commits, including implementation, test, E2E, and evidence/documentation commits.
+
+### Outstanding before final submission
+
+1. Record and add the required 8–10 minute demo video link.
+2. Run the unit suite and focused Playwright test on the current working tree if time permits, then replace evidence only with the output from those actual runs.
+3. Run Stryker on the latest test set and save the console output/JSON to the exact `mutation-after` filenames required by `tasks.md`; do not reuse the older score as if it included the decimal-boundary tests.
+4. Resolve or explicitly leave unresolved the baseline console/JSON discrepancy. The current files are not a trustworthy before/after comparison.
+5. Run `git status --short` and review all modified/untracked files before committing/submitting. This archive's Git working tree is not clean; many source/config files and several evidence logs are modified or untracked.
+6. Confirm the assignment owner's expectation for a separate durable audit-history store; current implementation preserves invoice decision/stage metadata, but the need for a separate audit store is not established by the provided requirement evidence.
+
+### Exact validation commands
+
+From the repository root in PowerShell:
+
+```powershell
+dotnet test .\backend\InvoiceApp.sln
+```
+
+For the focused Playwright scenario:
+
+```powershell
+cd e2e
+npm install
+npx playwright install chromium
+npm test
+cd ..
+```
+
+For the pinned Stryker run, use the validated invocation from the repository's `AGENTS.md`/prior evidence and save the actual output to the required `mutation-after-console.txt` and `mutation-after.txt` paths. Do not claim completion until the command actually runs successfully.
 
 ## Recent commit
 
