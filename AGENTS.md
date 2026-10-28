@@ -86,8 +86,17 @@ Invoice approval demo app: ASP.NET Core 8 Web API with a small static web UI.
 
 ## Demo accounts (not real credentials)
 
-- `demo.approver` / `ChangeMe123!` (role Approver)
-- `demo.admin` / `ChangeMe123!` (role Admin)
+All accounts use the local demo password `ChangeMe123!`.
+
+- `demo.approver` — Approver role; retained for the original demo workflow.
+- `demo.admin` — Admin role; retained for the original demo workflow.
+- `manager.demo` — Manager role; used for Manager approval actions.
+- `director.demo` — Director role; used for Director approval actions.
+
+For the invoice approval limits workflow, use `manager.demo` and
+`director.demo` to exercise the role-specific approval rules.
+Invoices above 500,000 require Manager approval followed by approval
+from a different Director.
 
 ## Never
 
