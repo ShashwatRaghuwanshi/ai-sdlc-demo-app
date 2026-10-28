@@ -1,4 +1,4 @@
-﻿using InvoiceApp.Domain;
+using InvoiceApp.Domain;
 using Xunit;
 
 namespace InvoiceApp.Tests;
@@ -487,5 +487,47 @@ public void Approve_WithBlankUsername_ThrowsWithoutMutatingInvoice()
     
 
 
+
+    [Fact]
+    public void Manager_CannotFinallyApproveInvoiceOf50000Point01()
+    {
+        var invoice = InvoiceWith(
+            "INV-50000-01",
+            50000.01m,
+            InvoiceStatus.PendingApproval);
+        var repository = new FakeInvoiceRepository(invoice);
+        var service = new ApprovalService(repository);
+
+        Assert.Throws<InvalidOperationException>(
+            () => service.Approve(invoice.Id, "manager-user", "Manager"));
+
+        Assert.Equal(InvoiceStatus.PendingApproval, invoice.Status);
+        Assert.Null(invoice.DecidedBy);
+        Assert.Null(invoice.DecidedAt);
+        Assert.Null(invoice.ManagerApproval);
+        Assert.Null(invoice.DirectorApproval);
+        Assert.Equal(0, repository.UpdateCallCount);
+    }
+
+    [Fact]
+    public void Director_CannotFinallyApproveInvoiceOf500000Point01WithoutManagerStage()
+    {
+        var invoice = InvoiceWith(
+            "INV-500000-01",
+            500000.01m,
+            InvoiceStatus.PendingApproval);
+        var repository = new FakeInvoiceRepository(invoice);
+        var service = new ApprovalService(repository);
+
+        Assert.Throws<InvalidOperationException>(
+            () => service.Approve(invoice.Id, "director-user", "Director"));
+
+        Assert.Equal(InvoiceStatus.PendingApproval, invoice.Status);
+        Assert.Null(invoice.DecidedBy);
+        Assert.Null(invoice.DecidedAt);
+        Assert.Null(invoice.ManagerApproval);
+        Assert.Null(invoice.DirectorApproval);
+        Assert.Equal(0, repository.UpdateCallCount);
+    }
 }
 
