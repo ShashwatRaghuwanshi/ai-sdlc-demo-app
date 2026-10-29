@@ -179,9 +179,14 @@ discrepancy remains unresolved.
 
 8.  **Demo and final packaging --- Partially complete.** The AI
     interaction log and summary are present in
-    `specs/001-approval-workflow/`. The live demo video link remains
-    outstanding. Confirm the final Git status and submission packaging
+    `specs/001-approval-workflow/`, and the demo video link is included
+    below. Confirm that the link is accessible to reviewers, create the
+    required pull request, and verify final Git status and packaging
     before declaring the assignment complete.
+
+## Demo video
+
+[Watch the invoice approval workflow demo](https://drive.google.com/file/d/1senHukoFiAKfZuxiekwJ8RZQV0R05EP4/view?usp=drive_link)
 
 ## Outstanding deliverables
 
@@ -190,8 +195,8 @@ discrepancy remains unresolved.
     and
     `specs/001-approval-workflow/ai-interaction-summary-assignment.md`.
     Consult the summary for provenance and limitations.
--   [ ] Record the live 8--10 minute demo video and add its actual URL
-    to this document.
+-   [x] Record the live 8--10 minute demo video and add its actual URL
+    to this document. Verify reviewer access to the linked video.
 -   [x] Review the specification quality checklist at
     `specs/001-approval-workflow/checklists/requirements.md`; its listed
     requirements are checked.
@@ -211,6 +216,47 @@ discrepancy remains unresolved.
     fresh Domain Stryker run completed with exit code 0.
 -   [ ] Verify final commit history, working tree, PR description, and
     demo-video link before submission.
+
+## Pull request preparation
+
+The changes are on `feature/invoice-approval-limits` and have been pushed
+to the fork. **A pull request has not yet been created**, so no PR URL is
+listed here. The assignment requires a PR on the fork, a review of the
+changes using an agent, and every review finding to be recorded in the PR
+description with a clear verdict: fixed, dismissed with a reason, or
+deferred with a reason.
+
+When creating the PR, use the intended base branch specified by the
+assignment/repository. The PR description should include the following:
+
+1. **Summary and scope:** approval thresholds and two-stage approval
+   above 500,000; case-insensitive distinct-approver validation; rejection
+   without unintended state mutation; unit and focused Playwright tests.
+2. **Validation evidence:** `dotnet test .\backend\InvoiceApp.sln --nologo`
+   (79 passed); `npm test` from `e2e` (1 passed); fresh Domain Stryker
+   result (119 tested/killed, 0 survived, 33 ignored, 100.00% reported).
+   State that the mutation score applies only to the tested Domain mutants.
+3. **Evidence and demo:** link the committed evidence under
+   `specs/001-approval-workflow/` and the demo video linked above.
+4. **Review findings and verdicts:** include every finding below, retaining
+   the stated reason for dismissed/deferred items. Do not imply the
+   unresolved baseline discrepancy or audit-history question is fixed.
+5. **Known limitations:** the historical baseline console and JSON
+   artifacts disagree, so no reliable before/after mutation-score
+   improvement is claimed; the requirement for a separate durable
+   audit-history store remains to be clarified.
+
+The existing **PR self-review findings and verdicts** section is the
+source of truth for the findings list to copy into the PR description.
+After creating the PR, add its actual URL here and update this status.
+
+### PR status
+
+- Branch: `feature/invoice-approval-limits`
+- Repository: `ShashwatRaghuwanshi/ai-sdlc-demo-app`
+- Changes: committed and pushed to the feature branch (verify latest
+  working-tree status before submission).
+- Pull request: **Not created yet**.
 
 ## Submission status as of 2026-10-29
 
@@ -235,18 +281,20 @@ discrepancy remains unresolved.
 
 ### Remaining before final submission
 
-1.  Record and add the actual 8--10 minute demo video link.
+1.  Verify that the demo video link is accessible to reviewers.
 2.  Reconcile the historical baseline discrepancy if possible; otherwise
-    keep the limitation explicitly documented.
+    keep the limitation explicitly documented and do not claim a score delta.
 3.  Confirm whether a separate durable audit-history store is required
-    by the assignment specification.
-4.  Run `git status --short` and review all modified/untracked files
-    before committing/submitting.
-5.  Verify that the PR description lists every review finding and its
-    fixed, dismissed, or deferred verdict.
-6.  Ensure the final task checklist reflects the successful final
-    mutation run and leaves the baseline-comparison task pending until
-    the discrepancy is resolved.
+    by the assignment specification; document the outcome or leave it
+    explicitly deferred.
+4.  Run `git status --short` and review all modified/untracked files;
+    commit and push the final `ASSIGNMENT.md` update.
+5.  Create the required pull request against the intended base branch.
+6.  Have the agent review the PR and include every finding in the PR
+    description with a fixed, dismissed-with-reason, or deferred-with-reason
+    verdict. Use the findings and wording in this document as the checklist.
+7.  Update this document with the actual PR URL and verify the final task
+    checklist reflects the successful final mutation run.
 
 ## Validation commands
 
@@ -319,6 +367,7 @@ and 0 timed out.
 
 The historical general mutation reports do not establish a reliable
 before/after comparison, so no mutation-score improvement is claimed.
-The assignment should not be declared fully complete until the demo
-video link, baseline-comparison decision, audit-history clarification,
-and final PR/packaging checks have been addressed.
+The demo video link is now included, but reviewer access should be checked.
+The assignment should not be declared fully complete until the baseline
+comparison decision, audit-history clarification, PR creation/review, and
+final packaging checks have been addressed.
