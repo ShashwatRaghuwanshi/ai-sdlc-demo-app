@@ -149,9 +149,13 @@
 - [x] T064 Keep the E2E auth path distinct from business rules by using the existing bearer-token/session architecture and the projectâ€™s current demo-user model rather than bypassing the runtime role checks
 - [x] T065 Confirm the Playwright validation command remains `cd e2e && npm install && npx playwright install chromium && npm test` and capture the exact command used in the assignment notes; the existing console evidence shows the npm `test` script invoking the focused Playwright test
 - [x] T066 Run the final unit-test suite `dotnet test backend/InvoiceApp.sln` after the implementation and capture the console output; do not mark it passing until the terminal output confirms the result
-- [ ] T067 **Still required:** Run the mutation command against the latest tests and capture actual output to `specs/001-approval-workflow/mutation-after-console.txt` using `dotnet stryker --project backend/src/InvoiceApp.Domain/InvoiceApp.Domain.csproj --reporter progress --reporter json --output specs/001-approval-workflow/mutation-after`; save the generated JSON report as `specs/001-approval-workflow/mutation-after.txt`. The historical successful run predates the latest decimal-boundary tests, so do not copy it as fresh evidence.
-- [ ] T068 Compare the baseline and final mutation evidence captured in the actual before/after console and report files; record the mutation score delta and any surviving mutants only when actual values are present; otherwise clearly state that the run failed and no score was produced
-- [ ] T085 Review the evidence set already produced by T004, T067, and T068 and record the before/after mutation comparison, the unit-test result, and any honest failure details; do not rerun the mutation command or unit suite for this step unless a new evidence need is identified
+- 
+- [x] T067 Run the final Domain mutation command against the current test set using Stryker.NET 4.13.0. The run completed successfully with exit code 0: 152 mutants created, 119 tested and killed, 33 ignored, 0 survived, and 0 timed out. The final mutation score was 100.00% for the 119 tested mutants. Evidence: `specs/001-approval-workflow/mutation-after-console.txt` and `specs/001-approval-workflow/mutation-after.txt`.
+
+- [ ] T068 Compare the baseline and final mutation evidence. The final result is now captured, but the baseline console and JSON reports contain conflicting totals. Keep this task pending until the discrepancy is reconciled; do not claim a reliable before/after score delta.
+
+- [ ] T085 Review the baseline and final mutation evidence and record the comparison, unit-test result, and any unresolved evidence limitations after T068 is resolved.
+
 
 **Checkpoint**: The focused E2E flow, the unit suite, and both mutation checkpoints are recorded as evidence and remain explicitly pending until executed.
 
