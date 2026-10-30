@@ -356,6 +356,13 @@ historical baseline score as if it were a comparable result.
 
 Verify the current branch and history before submission.
 
+## Pull Request
+
+- **PR:** [feat: implement invoice approval limits and validation](https://github.com/ShashwatRaghuwanshi/ai-sdlc-demo-app/pull/1)
+- **Status:** Open
+- **Base branch:** main
+- **Feature branch:** feature/invoice-approval-limits
+
 ## Conclusion
 
 The repository contains the invoice approval workflow implementation and
