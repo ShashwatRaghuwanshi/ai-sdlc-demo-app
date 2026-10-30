@@ -70,6 +70,38 @@ The log captures execution-related tool calls and outputs where included in the 
 5. Timestamps are converted from the export's Unix-millisecond values to UTC and are not independently verified against a separate clock.
 6. The mutation-testing score cited above predates the latest decimal-boundary tests and should be refreshed if the assignment requires final-state mutation evidence.
 
-## 9. Submission guidance
+## 9. Final read-only branch review (feature/invoice-approval-limits vs main)
+
+A targeted read-only review of the current feature branch was completed against the repository’s approval workflow rules, architecture, authentication model, task artifacts, and validation evidence. The review covered:
+
+- approval thresholds
+- approval sequence / stage ordering
+- different-Director requirement for the >500,000 workflow
+- duplicate approver prevention and same-user checks
+- rejection and state-preservation behavior
+- authentication and authorization boundaries
+- architecture and layering expectations
+- unit and Playwright validation evidence
+- documentation and mutation evidence quality
+
+### Outcome
+
+The review concluded that the current feature branch has no confirmed functional defects in the inspected implementation. The branch matched the project rules in the reviewed code and tests, and the read-only review did not identify a functional defect requiring a code change.
+
+### Evidence captured in this review
+
+- .NET unit tests: 79 passed, 0 failed
+- Playwright: 1 passed, 0 failed
+- Fresh Domain mutation evidence: 119 tested, 119 killed, 0 survived, 33 ignored by the covered-code filter
+
+### Caveat
+
+The historical mutation baseline artifacts in the repo are internally inconsistent and are therefore treated as a documentation/evidence-quality issue rather than as reliable before/after evidence for a code defect. The fresh Domain mutation run is the current source of truth.
+
+### Scope constraint
+
+This review was explicitly read-only. No application source files were modified, and no pull request was created or submitted.
+
+## 10. Submission guidance
 
 Submit this summary with `ai-interaction-log-assignment.jsonl`. Retain the original `chat.json`, `chat1.json`, and `chat2.json` exports as supporting source evidence if the assignment permits or requests them. The JSONL preserves original exported model metadata and adds separate fields for the observed model, the Auto selection setting, and the basis for that observation.
