@@ -1,5 +1,7 @@
 namespace InvoiceApp.Domain;
 
+public sealed record InvoiceApprovalStage(string ApproverUsername, DateTime ApprovedAt);
+
 public class Invoice
 {
     public string Id { get; set; } = string.Empty;
@@ -10,4 +12,6 @@ public class Invoice
     public string? DecidedBy { get; set; }
     public DateTime? DecidedAt { get; set; }
     public string? DecisionNote { get; set; }
+    public InvoiceApprovalStage? ManagerApproval { get; set; }
+    public InvoiceApprovalStage? DirectorApproval { get; set; }
 }

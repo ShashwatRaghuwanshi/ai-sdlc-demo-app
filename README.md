@@ -14,6 +14,12 @@ Open http://localhost:5000 and sign in:
 | --- | --- | --- |
 | `demo.approver` | `ChangeMe123!` | Approver |
 | `demo.admin` | `ChangeMe123!` | Admin |
+| `manager.demo` | `ChangeMe123!` | Manager |
+| `director.demo` | `ChangeMe123!` | Director |
+
+For invoice approval limit scenarios, use the Manager and Director
+accounts. Invoices above 500,000 require two distinct approvers:
+a Manager first, followed by a different Director.
 
 These are demo accounts for a local, in-memory app. They are not real credentials.
 

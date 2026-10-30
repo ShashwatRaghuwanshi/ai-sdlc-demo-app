@@ -13,5 +13,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\InvoiceApp.Domain\InvoiceApp.Domain.csproj" />
+    <ProjectReference Include="..\..\src\InvoiceApp.Api\InvoiceApp.Api.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\src\InvoiceApp.Api\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
